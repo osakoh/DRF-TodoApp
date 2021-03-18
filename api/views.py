@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 
 from rest_framework import status
@@ -13,7 +13,7 @@ from .serializers import TaskSerializer
 def api_overview(request):
     api_urls = {
         'List': '/task-list/',
-        'Detail View': '/task-detail/<str:pk>/',
+        'Detail View': '/task-detail/<int:pk>/',
         'Create': '/task-create/',
         'Update': '/task-update/<str:pk>/',
         'Delete': '/task-delete/<str:pk>/',
@@ -30,10 +30,10 @@ def task_list(request):
 
 
 @api_view(['GET'])
-def task_detail(request, pk):
+def task_detail(request, task_pk):
     """ returns a single task based on the pk """
-    tasks = Task.objects.get(id=pk)
-    serializer = TaskSerializer(tasks, many=False)
+    task = get_object_or_404(Task, id=task_pk)
+    serializer = TaskSerializer(task, many=False)
     return Response(serializer.data)
 
 
@@ -49,9 +49,9 @@ def task_create(request):
 
 
 @api_view(['POST'])
-def task_update(request, pk):
+def task_update(request, task_pk):
     """ updates an existing task """
-    task = Task.objects.get(id=pk)
+    task = get_object_or_404(Task, id=task_pk)
     serializer = TaskSerializer(instance=task, data=request.data)
 
     if serializer.is_valid():
@@ -61,9 +61,9 @@ def task_update(request, pk):
 
 
 @api_view(['DELETE'])
-def task_delete(request, pk):
+def task_delete(request, task_pk):
     """ deletes a task based on the pk """
-    task = Task.objects.get(id=pk)
+    task = get_object_or_404(Task, id=task_pk)
     task.delete()
 
     return Response('Successfully deleted a task!')

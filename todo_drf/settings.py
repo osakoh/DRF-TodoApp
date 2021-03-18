@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'api.apps.ApiConfig',  # api app
+    'frontend.apps.FrontendConfig',  # frontend app
 
     'rest_framework',  # django rest framework
 
@@ -117,3 +118,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# location of all 'static' files
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'todo_drf/static')
+]
+
+# creates 'static' folder in the root dir (CMS) after running collectstatic
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
